@@ -1,6 +1,7 @@
 import { useRef as useDemoLoginRef, useState as useDemoLoginState } from 'react';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import RecordDialog from './RecordDialog.jsx';
+import FeaturePackPanel from './FeaturePackPanel.jsx';
 
 const money = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Number(value || 0));
 const pretty = value => String(value || '').replaceAll('_', ' ').replace(/\b\w/g, letter => letter.toUpperCase());
@@ -96,7 +97,7 @@ function DomainHome({ app, openFeature }) {
   if (!product) return <p>Loading {app.domainProduct.home}…</p>;
   const totalValue = product.features.reduce((sum, item) => sum + item.value, 0);
   const attention = product.features.reduce((sum, item) => sum + item.attention, 0);
-  return <><PageTitle title={product.home} subtitle={product.context}/><div className="domainHero"><div><span className="eyebrow">{app.industry}</span><h3>Purpose-built operational system</h3><p>{product.context}</p></div><div className="heroMetrics"><Metric label="Native capabilities" value={product.features.length}/><Metric label="Records under control" value={product.features.reduce((sum, item) => sum + item.count, 0)}/><Metric label="Value represented" value={money(totalValue)}/><Metric label="Need action" value={attention}/></div></div><div className="domainGrid">{product.features.map((feature, index) => <button className={`domainCard view-${feature.view}`} key={feature.id} onClick={() => openFeature(feature.id)}><span className="domainIndex">{String(index + 1).padStart(2, '0')}</span><div><strong>{feature.title}</strong><p>{feature.description}</p><span className="domainStats">{feature.count} governed records · {feature.attention} require action · {money(feature.value)}</span></div><b>Open capability →</b></button>)}</div></>;
+  return <><PageTitle title={product.home} subtitle={product.context}/><div className="domainHero"><div><span className="eyebrow">{app.industry}</span><h3>Purpose-built operational system</h3><p>{product.context}</p></div><div className="heroMetrics"><Metric label="Native capabilities" value={product.features.length}/><Metric label="Records under control" value={product.features.reduce((sum, item) => sum + item.count, 0)}/><Metric label="Value represented" value={money(totalValue)}/><Metric label="Need action" value={attention}/></div></div><FeaturePackPanel api={api} insightsPath="/api/insights" exportPath="/api/records/export"/><div className="domainGrid">{product.features.map((feature, index) => <button className={`domainCard view-${feature.view}`} key={feature.id} onClick={() => openFeature(feature.id)}><span className="domainIndex">{String(index + 1).padStart(2, '0')}</span><div><strong>{feature.title}</strong><p>{feature.description}</p><span className="domainStats">{feature.count} governed records · {feature.attention} require action · {money(feature.value)}</span></div><b>Open capability →</b></button>)}</div></>;
 }
 
 function DomainCapability({ app, featureId, notify }) {
